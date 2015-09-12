@@ -39,7 +39,6 @@ if [ $? == 0 ]
             echo "Installation aborded !"
           fi
       fi
-
-  fi
+fi
 }
 main
