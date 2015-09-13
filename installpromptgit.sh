@@ -33,7 +33,7 @@ add_to_eof () {
 test_if_already_modified (){
   if grep -lR "#start adding modifs prompt-git.sh" ~/test.sh
     then
-    echo "Fichier déjà modifié !"
+    return 1
     else
     return 0
   fi
@@ -56,12 +56,19 @@ if [ $? == 0 ]
         read choise
         if [ $choise == y ] || [ $choise == yes ]
           then
-            add_to_eof "$text_to_add" "$prompt_var"
+            check_file_exist $local_bashrc_sh_file
+            echo $?
+            if [[ $? == 1 ]]; then
+              echo "Fichier déjà modifié !"
+            elif [[ $? == 0 ]]; then
+              echo "Ajout au fichier..."
+              add_to_eof "$text_to_add" "$prompt_var"
+            else echo "Error !"
+            fi
           else
             echo "Installation aborded !"
           fi
       fi
 fi
 }
-#main
-test_if_already_modified
+main
