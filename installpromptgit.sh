@@ -30,40 +30,42 @@ add_to_eof () {
   echo -e "$1" >> $dl_directory$local_bashrc_sh_file
   echo -E "$2" >> $dl_directory$local_bashrc_sh_file
 }
-test_if_already_modified (){
-  if grep -lR "#start adding modifs prompt-git.sh" ~/test.sh
+test_if_already_modified () {
+  if grep --quiet "#start adding modifs prompt-git.sh" ~/$1;
     then
-    return 1
+      return 1
     else
-    return 0
+      return 0
   fi
 }
 main () {
 check_file_exist $dled_file
-if [ $? == 0 ]
+if [ $? == 0 ];
   then
   echo "Downloading latest version from github..."
   downld_latest
   else
     echo -e "File already exist\nDo you want to overwrite/update it, yes(y) or no(N) ?"
     read response
-    if [ $response == y ] || [ $response == Y ]
+    if [ $response == y ] || [ $response == Y ];
       then
-        echo "Downloading and overwirting file ..."
+        echo "Downloading and overwriting file ..."
         downld_latest
       else
         echo "Do you want to continue install, yes(y) or no(N) ?"
         read choise
-        if [ $choise == y ] || [ $choise == yes ]
+        if [ $choise == y ] || [ $choise == yes ];
           then
-            check_file_exist $local_bashrc_sh_file
-            echo $?
-            if [[ $? == 1 ]]; then
-              echo "Fichier déjà modifié !"
-            elif [[ $? == 0 ]]; then
-              echo "Ajout au fichier..."
-              add_to_eof "$text_to_add" "$prompt_var"
-            else echo "Error !"
+            test_if_already_modified $local_bashrc_sh_file
+            test_if_already_modified $local_bashrc_sh_file
+            #echo $?
+            if [ $? == 1 ];
+              then
+                echo "Fichier déjà modifié !"
+              else
+                echo "Ajout au fichier..."
+                add_to_eof "$text_to_add" "$prompt_var"
+
             fi
           else
             echo "Installation aborded !"
@@ -72,3 +74,4 @@ if [ $? == 0 ]
 fi
 }
 main
+#test_if_already_modified $local_bashrc_sh_file
