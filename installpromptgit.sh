@@ -5,7 +5,8 @@ file_sh_git='git-prompt.sh'
 remote_git_file='git-prompt.sh'
 local_bashrc_sh_file='test.sh'
 bslash=$(echo $'\x5C'$'\x5C'$'\x5C')
-text_to_add="#start adding modifs prompt-git.sh \nsource ~/git-prompt.sh
+text_to_add="#start adding modifs prompt-git.sh
+source ~/git-prompt.sh
 export GIT_PS1_SHOWDIRTYSTATE=1 GIT_PS1_SHOWSTASHSTATE=1 GIT_PS1_SHOWUNTRACKEDFILES=1
 export GIT_PS1_SHOWUPSTREAM=verbose GIT_PS1_DESCRIBE_STYLE=branch
 #Enable color for git states
