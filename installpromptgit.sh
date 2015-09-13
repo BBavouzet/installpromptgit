@@ -43,6 +43,8 @@ if [ $? == 0 ]
       then
         echo "Downloading and overwirting file ..."
         downld_latest
+        echo "Updating file ~\.bashrc ..."
+        add_to_eof "$text_to_add" "$prompt_var"
       else
         echo "Do you want to continue install, yes(y) or no(N) ?"
         read choise
