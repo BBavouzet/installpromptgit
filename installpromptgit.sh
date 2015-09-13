@@ -30,6 +30,14 @@ add_to_eof () {
   echo -e "$1" >> $dl_directory$local_bashrc_sh_file
   echo -E "$2" >> $dl_directory$local_bashrc_sh_file
 }
+test_if_already_modified (){
+  if grep -lR "#start adding modifs prompt-git.sh" ~/test.sh
+    then
+    echo "Fichier déjà modifié !"
+    else
+    return 0
+  fi
+}
 main () {
 check_file_exist $dled_file
 if [ $? == 0 ]
@@ -55,4 +63,5 @@ if [ $? == 0 ]
       fi
 fi
 }
-main
+#main
+test_if_already_modified
