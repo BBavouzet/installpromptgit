@@ -30,12 +30,27 @@ add_to_eof () {
   echo -e "$1" >> $dl_directory$local_bashrc_sh_file
   echo -E "$2" >> $dl_directory$local_bashrc_sh_file
 }
+bckpfile () {
+  echo "Backuping $1 file to $1.back..."
+  cp $dl_directory$1 $dl_directory$1.back
+}
 main () {
 check_file_exist $dled_file
 if [ $? == 0 ]
   then
   echo "Downloading latest version from github..."
   downld_latest
+  check_file_exist $dl_directory$local_bashrc_sh_file.back
+  if [ $? == 0 ];
+  then
+    bckpfile $local_bashrc_sh_file
+    echo "Updating file $local_bashrc_sh_file ..."
+    add_to_eof "$text_to_add" "$prompt_var"
+    echo Done
+  else
+    echo "$local_bashrc_sh_file.back already exist, rename it"
+    echo "File $local_bashrc_sh_file was't modified\nInstall aborded"
+  fi
   else
     echo -e "File already exist\nDo you want to overwrite/update it, yes(y) or no(N) ?"
     read response
@@ -43,14 +58,33 @@ if [ $? == 0 ]
       then
         echo "Downloading and overwirting file ..."
         downld_latest
-        echo "Updating file ~\.bashrc ..."
-        add_to_eof "$text_to_add" "$prompt_var"
+        check_file_exist $dl_directory$local_bashrc_sh_file.back
+        if [ $? == 0 ];
+        then
+          bckpfile $local_bashrc_sh_file
+          echo "Updating file $local_bashrc_sh_file ..."
+          add_to_eof "$text_to_add" "$prompt_var"
+          echo Done
+        else
+          echo "$local_bashrc_sh_file.back already exist, rename it"
+          echo "File $local_bashrc_sh_file was't modified\nInstall aborded"
+        fi
       else
         echo "Do you want to continue install, yes(y) or no(N) ?"
         read choise
         if [ $choise == y ] || [ $choise == yes ]
           then
-            add_to_eof "$text_to_add" "$prompt_var"
+            check_file_exist $dl_directory$local_bashrc_sh_file.back
+            if [ $? == 0 ];
+            then
+              bckpfile $local_bashrc_sh_file
+              echo "Updating file $local_bashrc_sh_file ..."
+              add_to_eof "$text_to_add" "$prompt_var"
+              echo Done
+            else
+              echo "$local_bashrc_sh_file.back already exist, rename it"
+              echo -e "File $local_bashrc_sh_file was't modified\nInstall aborded"
+            fi
           else
             echo "Installation aborded !"
           fi
