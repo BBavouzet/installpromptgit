@@ -39,7 +39,6 @@ add_to_eof () {
   echo -E "$2" >> $dl_directory$local_bashrc_sh_file
 }
 
-
 test_if_already_modified () {
   if grep --quiet "#start adding modifs prompt-git.sh" ~/$1;
     then
@@ -48,79 +47,76 @@ test_if_already_modified () {
       return 0
   fi
 }
-bckpfile () {
-  echo "Backuping $1 file to $1.back..."
-  cp $dl_directory$1 $dl_directory$1.back
 
+bckpfile () {
+  echo -e "\nBackuping $1 file to $1.back ..."
+  cp $dl_directory$1 $dl_directory$1.back
 }
+
 main () {
 check_file_exist $dled_file
 if [ $? == 0 ];
   then
-  echo "Downloading latest version from github..."
+  echo -e "\nDownloading latest version of $file_sh_git from github ..."
   downld_latest
   check_file_exist $dl_directory$local_bashrc_sh_file.back
   if [ $? == 0 ];
     then
       bckpfile $local_bashrc_sh_file
-      echo "Updating file $local_bashrc_sh_file ..."
+      echo -e "\nUpdating file $local_bashrc_sh_file ..."
       add_to_eof "$text_to_add" "$prompt_var"
       echo Done
     else
-      echo "$local_bashrc_sh_file.back already exist, rename it"
-      echo "File $local_bashrc_sh_file was't modified\nInstall aborded"
+      echo -e "\n$local_bashrc_sh_file.back already exist, rename it\n"
+      echo -e "\nFile $local_bashrc_sh_file was't modified\n\nInstall ABORDED !!"
     fi
   else
-    echo -e "File already exist\nDo you want to overwrite/update it, yes(y) or no(any keys) ?"
+    echo -e "\nFile $dled_file already exist\n\nDo you want to overwrite/update it, yes(y) or no(any keys) ?"
     read response
     if [ $response == y ] || [ $response == Y ];
       then
-        echo "Downloading and overwriting file ..."
+        echo -e "\nDownloading and overwriting file $dl_directory$local_bashrc_sh_file ..."
         downld_latest
         check_file_exist $dl_directory$local_bashrc_sh_file.back
           if [ $? == 0 ];
             then
               bckpfile $local_bashrc_sh_file
-              echo "Updating file $local_bashrc_sh_file ..."
+              echo -e "\nUpdating file $dl_directory$local_bashrc_sh_file ..."
               add_to_eof "$text_to_add" "$prompt_var"
-              echo Done
+              echo -e "\nDone"
             else
-              echo "$local_bashrc_sh_file.back already exist, rename it"
-              echo "File $local_bashrc_sh_file was't modified\nInstall aborded"
+              echo -e "\n$dl_directory$local_bashrc_sh_file.back already exist, rename it"
+              echo -e "File $dl_directory$local_bashrc_sh_file was't modified\n\nInstall ABORDED !!"
             fi
       else
-        echo "Do you want to continue install, yes(y) or no(any keys) ?"
+        echo -e "\nDo you want to continue for update file $dl_directory$local_bashrc_sh_file, yes(y) or no(any keys) ?"
         read choice
         if [ $choice == y ] || [ $choice == yes ]
           then
-
             check_file_exist $dl_directory$local_bashrc_sh_file.back
             if [ $? == 0 ];
             then
               bckpfile $local_bashrc_sh_file
-              echo "Updating file $local_bashrc_sh_file ..."
+              echo -e "\nUpdating file $local_bashrc_sh_file ..."
               test_if_already_modified $local_bashrc_sh_file
-              #echo $?
               if [ $? == 1 ];
                 then
-                  echo "Fichier déjà modifié !"
+                  echo -e "\nFile $dl_directory$local_bashrc_sh_file already modified by script !\n"
                 else
-                  echo "Ajout au fichier..."
-
-              add_to_eof "$text_to_add" "$prompt_var"
-              echo Done
+                  echo -e "\nAdding lines to $dl_directory$local_bashrc_sh_file ..."
+                  add_to_eof "$text_to_add" "$prompt_var"
+                  echo Done
               fi
             else
-              echo "$local_bashrc_sh_file.back already exist, rename it"
-              echo -e "File $local_bashrc_sh_file was't modified\nInstall aborded"
-
-            fi
+              echo -e "\n$dl_directory$local_bashrc_sh_file.back already exist, rename it"
+              echo -e "\nFile $dl_directory$local_bashrc_sh_file was't modified\n\nInstall ABORDED !!\n"
+          fi
           else
-            echo "Installation aborded !"
+            echo "Install ABORDED !!"
           fi
       fi
 fi
-
 }
+
 main
 #test_if_already_modified $local_bashrc_sh_file
