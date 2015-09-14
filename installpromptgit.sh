@@ -27,7 +27,7 @@ if [ -f "$1" ]
   fi
 }
 
-#Télécharge via curl le script git-prompt depuis le dépôt officiel sur GitHub 
+#Télécharge via curl le script git-prompt depuis le dépôt officiel sur GitHub
 #avec écriture dans le home de l'utilisateur
 downld_latest () {
   curl https://raw.githubusercontent.com/git/git/dd160d794f0bf02c30d2e5032e216b1e8ac14222/contrib/completion/git-prompt.sh > $dl_directory$file_sh_git
@@ -39,19 +39,27 @@ add_to_eof () {
   echo -E "$2" >> $dl_directory$local_bashrc_sh_file
 }
 
-#Point d'entrée du script
+
+test_if_already_modified () {
+  if grep --quiet "#start adding modifs prompt-git.sh" ~/$1;
+    then
+      return 1
+    else
+      return 0
+  fi
+}
 main () {
 check_file_exist $dled_file
-if [ $? == 0 ]
+if [ $? == 0 ];
   then
   echo "Downloading latest version from github..."
   downld_latest
   else
     echo -e "File already exist\nDo you want to overwrite/update it, yes(y) or no(any keys) ?"
     read response
-    if [ $response == y ] || [ $response == Y ]
+    if [ $response == y ] || [ $response == Y ];
       then
-        echo "Downloading and overwirting file ..."
+        echo "Downloading and overwriting file ..."
         downld_latest
         echo "Updating file ~\.bashrc ..."
         add_to_eof "$text_to_add" "$prompt_var"
@@ -60,7 +68,17 @@ if [ $? == 0 ]
         read choice
         if [ $choice == y ] || [ $choice == yes ]
           then
-            add_to_eof "$text_to_add" "$prompt_var"
+            test_if_already_modified $local_bashrc_sh_file
+            test_if_already_modified $local_bashrc_sh_file
+            #echo $?
+            if [ $? == 1 ];
+              then
+                echo "Fichier déjà modifié !"
+              else
+                echo "Ajout au fichier..."
+                add_to_eof "$text_to_add" "$prompt_var"
+
+            fi
           else
             echo "Installation aborded !"
           fi
@@ -68,3 +86,4 @@ if [ $? == 0 ]
 fi
 }
 main
+#test_if_already_modified $local_bashrc_sh_file
