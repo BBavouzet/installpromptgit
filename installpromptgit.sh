@@ -38,7 +38,7 @@ add_to_eof () {
   echo -e "$1" >> $dl_directory$local_bashrc_sh_file
   echo -E "$2" >> $dl_directory$local_bashrc_sh_file
 }
-
+#Test la présence d'une ligne de caractères dans le fichier en argument
 test_if_already_modified () {
   if grep --quiet "#start adding modifs prompt-git.sh" ~/$1;
     then
@@ -47,7 +47,7 @@ test_if_already_modified () {
       return 0
   fi
 }
-
+#Rajoute .back au fichier en argument
 bckpfile () {
   echo -e "\nBackuping $1 file to $1.back ..."
   cp $dl_directory$1 $dl_directory$1.back
@@ -119,4 +119,3 @@ fi
 }
 
 main
-#test_if_already_modified $local_bashrc_sh_file
