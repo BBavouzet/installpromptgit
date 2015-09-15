@@ -1,9 +1,13 @@
 #!/bin/bash
 
+#Version
+# version 1.0.0
+# https://github.com/BBavouzet/installpromptgit.git
+
 #variables
 dl_directory=$(echo ~/)
 file_sh_git='git-prompt.sh'
-local_bashrc_sh_file='test.sh'
+local_bashrc_sh_file='.bashrc'
 bslash=$(echo $'\x5C'$'\x5C'$'\x5C')
 
 #Variables modifiant le bashrc
